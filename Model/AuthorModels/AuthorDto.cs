@@ -1,4 +1,4 @@
-﻿namespace EBook.Model.Author
+﻿namespace EBook.Model.AuthorModel
 {
     public class AuthorDto
     {

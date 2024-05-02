@@ -1,5 +1,5 @@
 ﻿using EBook.Interface;
-using EBook.Model;
+using EBook.Model.AuthorModel;
 using EBook.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,12 +44,12 @@ namespace EBook.Controllers
             }
         }
 
-        //[HttpPatch]
-        //[Route("/UpdateBook")]
-        //public ActionResult UpdateBook(int id, UpdateAuthorDto book)
-        //{
-        //    return Ok(_authorRepository.UpdateAuthor(id, book));
-        //}
+        [HttpPatch]
+        [Route("/UpdateAuthor")]
+        public ActionResult UpdateBook(int id, UpdateAuthorDto book)
+        {
+            return Ok(_authorRepository.UpdateAuthor(id, book));
+        }
 
         [HttpDelete]
         [Route("/DeleteAuthor")]

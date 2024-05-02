@@ -1,4 +1,4 @@
-﻿namespace EBook.Model
+﻿namespace EBook.Model.AuthorModel
 {
     public class Author
     {
@@ -13,29 +13,29 @@
         public Author() { }
         public Author(AuthorDto a)
         {
-            this.AuthorID = AuthorID;
-            this.FirstName = a.FirstName;
-            this.LastName = a.LastName;
-            this.Biography = a.Biography;
-            this.Country = a.Country;
-            this.Birthdate = a.Birthdate;
-            this.Created_At = DateTime.Now;
-            this.Updated_At = DateTime.Now;
+            AuthorID = AuthorID;
+            FirstName = a.FirstName;
+            LastName = a.LastName;
+            Biography = a.Biography;
+            Country = a.Country;
+            Birthdate = a.Birthdate;
+            Created_At = DateTime.Now;
+            Updated_At = DateTime.Now;
 
         }
 
         public Author(UpdateAuthorDto a)
         {
-            this.AuthorID = AuthorID;
-            this.FirstName = a.FirstName;
-            this.LastName = a.LastName;
-            this.Biography = a.Biography;
-            this.Country = a.Country;
-            this.Birthdate = Birthdate;
-            this.Updated_At = DateTime.Now;
+            AuthorID = AuthorID;
+            FirstName = a.FirstName;
+            LastName = a.LastName;
+            Biography = a.Biography;
+            Country = a.Country;
+            Birthdate = Birthdate;
+            Updated_At = DateTime.Now;
 
         }
     }
 
-    
+
 }
