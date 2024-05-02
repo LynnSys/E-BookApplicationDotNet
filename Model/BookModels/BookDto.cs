@@ -1,4 +1,4 @@
-﻿namespace EBook.Model
+﻿namespace EBook.Model.BookModels
 {
     public class BookDto
     {
@@ -11,7 +11,7 @@
         public string Publisher { get; set; }
         public int PageCount { get; set; }
         public float AverageRating { get; set; }
-        public int GenreID {  get; set; }
+        public int GenreID { get; set; }
     }
 
 }
