@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using EBook.Interface;
-using EBook.Model;
+using EBook.Model.AuthorModel;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -18,7 +18,7 @@ namespace EBook.Service
         public Author GetById(int id)
         {
             DynamicParameters dynamicParameters = new DynamicParameters();
-            var storedprod = "GetById";
+            var storedprod = "GetAuthorById";
             using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
             connection.Open();
             dynamicParameters.Add("@Id", id);

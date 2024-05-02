@@ -1,4 +1,5 @@
 using EBook.Interface;
+using EBook.Model;
 using EBook.Model.BookModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace EBook.Controllers
 
         [HttpPost]
         [Route("/EnterNewBook")]
-        public ActionResult AddBook(BookDto book)
+        public ActionResult AddBook(BookAuthorDto book)
         {
             if(book == null)
             {
@@ -33,8 +34,7 @@ namespace EBook.Controllers
             }
             else
             {
-                 
-                return Ok(_bookRepository.AddBook(book));
+                return Ok(_bookRepository.AddBook(book.Book,book.Authors));
             }
         }
 

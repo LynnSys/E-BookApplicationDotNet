@@ -1,8 +1,10 @@
 ﻿using EBook.Interface;
-using EBook.Model;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using EBook.Model.BookModels;
+using EBook.Model.AuthorModel;
+using EBook.Model;
 
 
 namespace EBook.Service
@@ -15,15 +17,29 @@ namespace EBook.Service
         {
             _configurations = configurations;
         }
-        public Book AddBook(BookDto book)
+        public Book AddBook(BookDto book, List<int> authors)
         {
             using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
             connection.Open();
             Book b = new Book(book);
+            //insert into Book Table
             var insertQuery = "INSERT INTO Book(Title, Description, ISBN, PublicationDate, Price, Language, Publisher, PageCount, AverageRating, GenreID) " +
-                "VALUES (@Title, @Description, @ISBN,@PublicationDate, @Price, @Language, @Publisher, @PageCount, @AverageRating, @GenreID)";
+                "VALUES (@Title, @Description, @ISBN,@PublicationDate, @Price, @Language, @Publisher, @PageCount, @AverageRating, @GenreID)"+
+                "SELECT CAST(SCOPE_IDENTITY() AS int)";
             //Dapper is implicitly used here when calling the Execute() method.
-            connection.Execute(insertQuery, b);
+            b.BookID = connection.ExecuteScalar<int>(insertQuery, b);
+
+            //insert into Mapping Table while specifying Authors
+            var storedproc = "MappingQuery";
+            foreach (var a in authors)
+            {
+                var parameters = new
+                {
+                    BookID = b.BookID,
+                    AuthorID = a
+                };
+                connection.Execute(storedproc, parameters);
+            }
             return b;
         }
 
