@@ -74,5 +74,16 @@ namespace EBook.Service
             var book = connection.Execute(storedprod, parameters, commandType: CommandType.StoredProcedure);
             return GetById(id);
         }
+
+        public List<Author> DeleteAuthor(int id)
+        {
+            DynamicParameters dynamicParameters = new DynamicParameters();
+            var storedprod = "DeleteAuthor";
+            using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
+            connection.Open();
+            dynamicParameters.Add("@Id", id);
+            connection.Execute(storedprod, dynamicParameters, commandType: CommandType.StoredProcedure);
+            return GetAllAuthors();
+        }
     }
 }

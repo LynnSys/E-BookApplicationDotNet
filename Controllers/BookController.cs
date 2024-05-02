@@ -55,12 +55,12 @@ namespace EBook.Controllers
             }
         }
 
-        [HttpPatch]
-        [Route("/UpdateBook")]
-        public ActionResult UpdateBook(int id, UpdateBookDto book)
-        {
-            return Ok(_bookRepository.UpdateBook(id, book));
-        }
+        //[HttpPatch]
+        //[Route("/UpdateBook")]
+        //public ActionResult UpdateBook(int id, UpdateBookDto book)
+        //{
+        //    return Ok(_bookRepository.UpdateBook(id, book));
+        //}
 
         [HttpDelete]
         [Route("/DeleteBook")]
