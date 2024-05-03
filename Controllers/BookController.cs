@@ -20,7 +20,7 @@ namespace EBook.Controllers
         [Route("/GetAllBooks")]
         public List<Book> GetAllBooks()
         {
-            return _bookRepository.GetAllBooks()  ;
+            return _bookRepository.GetAllBooks();
         }
 
 
@@ -28,14 +28,23 @@ namespace EBook.Controllers
         [Route("/EnterNewBook")]
         public ActionResult AddBook(BookAuthorDto book)
         {
-            if(book == null)
+            if (book == null)
             {
                 return BadRequest("Enter book details");
             }
             else
             {
-                return Ok(_bookRepository.AddBook(book.Book,book.Authors));
+                return Ok(_bookRepository.AddBook(book.Book, book.Authors));
             }
+        }
+
+
+        [HttpPost]
+        [Route("/EnterBookWithAuthor")]
+        public ActionResult EnterBookWithAuthor([FromBody] BookAuthorDto book)
+        {
+
+            return Ok(_bookRepository.AddBookWithAuthors(book.Book,book.Authors));
         }
 
         [HttpGet]

@@ -43,6 +43,41 @@ namespace EBook.Service
             return b;
         }
 
+        public Book AddBookWithAuthors(BookDto book, List<int> authors)
+        {
+            using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
+            connection.Open();
+
+            // Create a DataTable for the list of author IDs
+            var authorIdsTable = new DataTable();
+            authorIdsTable.Columns.Add("AuthorID", typeof(int));
+            foreach (var authorId in authors)
+            {
+                authorIdsTable.Rows.Add(authorId);
+            }
+
+            // Add book details and author IDs table as parameters
+            var parameters = new
+            {
+                Title = book.Title,
+                Description = book.Description,
+                ISBN = book.ISBN,
+                PublicationDate = book.PublicationDate,
+                Price = book.Price,
+                Language = book.Language,
+                Publisher = book.Publisher,
+                PageCount = book.PageCount,
+                AverageRating = book.AverageRating,
+                GenreID = book.GenreID,
+                AuthorIDs = authorIdsTable.AsTableValuedParameter("AuthorIDListType")
+            };
+
+            // Execute the stored procedure
+            var result = connection.QuerySingle<Book>("BookWithAuthors", parameters, commandType: CommandType.StoredProcedure);
+
+            return result;
+        }
+
         public List<Book> GetAllBooks()
         {
             var storedprod = "GetAllBooks";
