@@ -31,7 +31,7 @@ namespace EBook.Controllers
         }
 
         [HttpGet]
-        [Route("/GetBooksByGenre/{genreId}")]
+        [Route("/GetBooksByGenre")]
         public ActionResult GetBooksByGenre(int genreId)
         {
             var books = _searchRepository.GetBooksByGenre(genreId);
@@ -42,5 +42,16 @@ namespace EBook.Controllers
             return Ok(books);
         }
 
+        [HttpGet]
+        [Route("/GetBookByTitle")]
+        public ActionResult GetBooksByTitle(string title)
+        {
+            var book = _searchRepository.GetBookByTitle(title);
+            if (book == null)
+            {
+                return NotFound("Book with the specified title is not found.");
+            }
+            return Ok(book);
+        }
     }
 }

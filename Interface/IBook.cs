@@ -10,6 +10,5 @@ namespace EBook.Interface
         public Book GetById(int id);
         public Book UpdateBook(int id, UpdateBookDto book);
         public List<Book> DeleteBookById(int id);
-
     }
 }

@@ -19,12 +19,20 @@ namespace EBook.Service
         }
         public Book AddBook(BookDto book, List<int> authors)
         {
+            if (book == null)
+            {
+                throw new ArgumentNullException(nameof(book), "Book data cannot be null.");
+            }
+            if (authors == null || authors.Count == 0)
+            {
+                throw new ArgumentException("At least one author must be specified.", nameof(authors));
+            }
             using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
             connection.Open();
             Book b = new Book(book);
             //insert into Book Table
             var insertQuery = "INSERT INTO Book(Title, Description, ISBN, PublicationDate, Price, Language, Publisher, PageCount, AverageRating, GenreID) " +
-                "VALUES (@Title, @Description, @ISBN,@PublicationDate, @Price, @Language, @Publisher, @PageCount, @AverageRating, @GenreID)"+
+                "VALUES (@Title, @Description, @ISBN,@PublicationDate, @Price, @Language, @Publisher, @PageCount, @AverageRating, @GenreID)" +
                 "SELECT CAST(SCOPE_IDENTITY() AS int)";
             //Dapper is implicitly used here when calling the Execute() method.
             b.BookID = connection.ExecuteScalar<int>(insertQuery, b);
@@ -45,37 +53,57 @@ namespace EBook.Service
 
         public Book AddBookWithAuthors(BookDto book, List<int> authors)
         {
-            using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
-            connection.Open();
-
-            // Create a DataTable for the list of author IDs
-            var authorIdsTable = new DataTable();
-            authorIdsTable.Columns.Add("AuthorID", typeof(int));
-            foreach (var authorId in authors)
+            if (book == null)
             {
-                authorIdsTable.Rows.Add(authorId);
+                throw new ArgumentNullException(nameof(book), "Book data cannot be null.");
             }
 
-            // Add book details and author IDs table as parameters
-            var parameters = new
+            if (authors == null || authors.Count == 0)
             {
-                Title = book.Title,
-                Description = book.Description,
-                ISBN = book.ISBN,
-                PublicationDate = book.PublicationDate,
-                Price = book.Price,
-                Language = book.Language,
-                Publisher = book.Publisher,
-                PageCount = book.PageCount,
-                AverageRating = book.AverageRating,
-                GenreID = book.GenreID,
-                AuthorIDs = authorIdsTable.AsTableValuedParameter("AuthorIDListType")
-            };
+                throw new ArgumentException("At least one author must be specified.", nameof(authors));
+            }
 
-            // Execute the stored procedure
-            var result = connection.QuerySingle<Book>("BookWithAuthors", parameters, commandType: CommandType.StoredProcedure);
+            try
+            {
+                using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
+                connection.Open();
 
-            return result;
+                // Create a DataTable for the list of author IDs
+                var authorIdsTable = new DataTable();
+                authorIdsTable.Columns.Add("AuthorID", typeof(int));
+                foreach (var authorId in authors)
+                {
+                    authorIdsTable.Rows.Add(authorId);
+                }
+
+                // Add book details and author IDs table as parameters
+                var parameters = new
+                {
+                    Title = book.Title,
+                    Description = book.Description,
+                    ISBN = book.ISBN,
+                    PublicationDate = book.PublicationDate,
+                    Price = book.Price,
+                    Language = book.Language,
+                    Publisher = book.Publisher,
+                    PageCount = book.PageCount,
+                    AverageRating = book.AverageRating,
+                    GenreID = book.GenreID,
+                    AuthorIDs = authorIdsTable.AsTableValuedParameter("AuthorIDListType")
+                };
+
+                // Execute the stored procedure
+                var result = connection.QuerySingle<Book>("BookWithAuthors", parameters, commandType: CommandType.StoredProcedure);
+
+                return result;
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while adding a book with authors: {ex.Message}");
+                throw;
+            }
+
         }
 
         public List<Book> GetAllBooks()
@@ -118,7 +146,7 @@ namespace EBook.Service
                 };
             connection.Execute(storedprod, parameters, commandType: CommandType.StoredProcedure);
             return GetById(id);
-        }
+        } 
 
         public List<Book> DeleteBookById(int id)
         {

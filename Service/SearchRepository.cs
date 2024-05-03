@@ -3,6 +3,7 @@ using EBook.Interface;
 using EBook.Model;
 using EBook.Model.BookModels;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using static Dapper.SqlMapper;
 
@@ -17,18 +18,12 @@ namespace EBook.Service
             _configurations = configurations;
         }
 
-        public Book GetBookByGenre(string genreId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public BookAuthorDto GetBookByTitle(string title)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Book> GetBooksByAuthor(int authorId)
         {
+            if (authorId <= 0)
+            {
+                throw new ArgumentException("Author ID must be a positive integer.", nameof(authorId));
+            }
             var storedprod = "GetBooksByAuthor";
             using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
             connection.Open();
@@ -44,13 +39,31 @@ namespace EBook.Service
 
         public List<Book> GetBooksByGenre(int genreId)
         {
-            var storedProcedure = "GetBooksByGenre";
+            if (genreId <= 0)
+            {
+                throw new ArgumentException("Genre ID must be a positive integer.", nameof(genreId));
+            }
+
+            var storedprod = "GetBooksByGenre";
             using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
             connection.Open();
             var parameters = new DynamicParameters();
             parameters.Add("@GenreID", genreId);
-            return connection.Query<Book>(storedProcedure, parameters, commandType: CommandType.StoredProcedure).ToList();
-   
+            return connection.Query<Book>(storedprod, parameters, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public BookDto GetBookByTitle(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("Title cannot be null or empty.", nameof(title));
+            }
+            var storedprod = "GetBookByTitle";
+            using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
+            connection.Open();
+            var parameters = new DynamicParameters();
+            parameters.Add("@Title", title);
+            return connection.QuerySingle<BookDto>(storedprod, parameters, commandType: CommandType.StoredProcedure);
         }
     }
 }
