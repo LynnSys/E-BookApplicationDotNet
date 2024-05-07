@@ -37,8 +37,14 @@ namespace EBook.Controllers
             {
                 return BadRequest("User Not Found");
             }
-            return Ok("Creating Token");
+
+            if (!_userRepository.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+                return BadRequest("Wrong Password");
+            string token = _userRepository.CreateToken(user);
+            return Ok(token);
         }
+
+
         
     }
 }
