@@ -44,17 +44,17 @@ namespace EBook.Service
             };
 
             // Generate a key with at least 512 bits
-            byte[] keyBytes = GenerateHmacSha512Key(512);
-            var key = new SymmetricSecurityKey(keyBytes);
+            //byte[] keyBytes = GenerateHmacSha512Key(512);
+            //var key = new SymmetricSecurityKey(keyBytes);
 
-            //var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                //_configurations.GetSection("AppSettings:Token").Value));
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                _configurations.GetSection("AppSettings:Token").Value));
 
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now,
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: cred);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

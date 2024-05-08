@@ -1,14 +1,18 @@
 ﻿using EBook.Interface;
+using EBook.Model.AuthorModel;
 using EBook.Model.UserModels;
 using EBook.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 
 namespace EBook.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
+    
     public class LoginController : ControllerBase
     {
         public static User user = new User();
@@ -18,8 +22,10 @@ namespace EBook.Controllers
             _userRepository = userRepository;
         }
 
+        
         [HttpPost]
         [Route("/Register")]
+        
         public async Task<ActionResult<User>> Register(UserDto request)
         {
             _userRepository.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -44,7 +50,13 @@ namespace EBook.Controllers
             return Ok(token);
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("/TestAuthorization")]
+        public IActionResult TestAuthorization()
+        {
+            return Ok("Authorization successful");
+        }
 
-        
     }
 }
