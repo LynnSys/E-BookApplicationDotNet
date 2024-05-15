@@ -1,5 +1,6 @@
 ﻿using EBook.Interface;
 using EBook.Service;
+using EBook.Validators;
 
 namespace EBook.Model.BookModels
 {
@@ -37,6 +38,7 @@ namespace EBook.Model.BookModels
             Created_At = DateTime.Now;
             Updated_At = DateTime.Now;
             GenreID = b.GenreID;
+            
         }
 
         public Book(UpdateBookDto b)

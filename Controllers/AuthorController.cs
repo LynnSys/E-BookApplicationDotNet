@@ -1,6 +1,7 @@
 ﻿using EBook.Interface;
 using EBook.Model.AuthorModel;
 using EBook.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBook.Controllers
@@ -16,6 +17,7 @@ namespace EBook.Controllers
             _authorRepository = authorRepository;
         }
 
+        [Authorize(Roles = "User")]
         [HttpGet]
         [Route("/GetAllAuthors")]
         public ActionResult GetAllAuthors()
@@ -23,6 +25,7 @@ namespace EBook.Controllers
             return Ok(_authorRepository.GetAllAuthors());
         }
 
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetAuthorByID")]
         public ActionResult GetAuthorByID(int id)

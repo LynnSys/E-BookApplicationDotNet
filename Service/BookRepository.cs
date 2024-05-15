@@ -5,6 +5,11 @@ using System.Data;
 using EBook.Model.BookModels;
 using EBook.Model.AuthorModel;
 using EBook.Model;
+using System.Security.Cryptography;
+using EBook.Validators;
+using FluentValidation;
+using FluentValidation.Results;
+using System.ComponentModel;
 
 
 namespace EBook.Service
@@ -12,24 +17,43 @@ namespace EBook.Service
     public class BookRepository : IBook
     {
         private readonly IConfiguration _configurations;
+        BindingList<string> errors = new BindingList<string>();
 
         public BookRepository(IConfiguration configurations)
         {
             _configurations = configurations;
+            //errorListBox.DataSource = errors;
         }
+
+        public void validateBook(Book b)
+        {
+            BookValidators validator = new BookValidators();
+            ValidationResult results = validator.Validate(b);
+
+            if(results.IsValid == false)
+            {
+                foreach(ValidationFailure failure in results.Errors)
+                {
+                    errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
+                }
+
+            }
+        }
+
         public Book AddBook(BookDto book, List<int> authors)
         {
-            if (book == null)
-            {
-                throw new ArgumentNullException(nameof(book), "Book data cannot be null.");
-            }
-            if (authors == null || authors.Count == 0)
-            {
-                throw new ArgumentException("At least one author must be specified.", nameof(authors));
-            }
+            //if (book == null)
+            //{
+            //    throw new ArgumentNullException(nameof(book), "Book data cannot be null.");
+            //}
+            //if (authors == null || authors.Count == 0)
+            //{
+            //    throw new ArgumentException("At least one author must be specified.", nameof(authors));
+            //}
             using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
             connection.Open();
             Book b = new Book(book);
+
             //insert into Book Table
             var insertQuery = "INSERT INTO Book(Title, Description, ISBN, PublicationDate, Price, Language, Publisher, PageCount, AverageRating, GenreID) " +
                 "VALUES (@Title, @Description, @ISBN,@PublicationDate, @Price, @Language, @Publisher, @PageCount, @AverageRating, @GenreID)" +
@@ -108,11 +132,19 @@ namespace EBook.Service
 
         public List<Book> GetAllBooks()
         {
-            var storedprod = "GetAllBooks";
-            using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
-            connection.Open();
-            var x = connection.Query<Book>(storedprod, commandType: CommandType.StoredProcedure);
-            return x.ToList();
+            try
+            {
+                var storedprod = "GetAllBooks";
+                using SqlConnection connection = new SqlConnection(_configurations.GetConnectionString("ConnectionString"));
+                connection.Open();
+                var x = connection.Query<Book>(storedprod, commandType: CommandType.StoredProcedure);
+                return x.ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while adding a book with authors: {ex.Message}");
+                throw;
+            }
         }
 
         public Book GetById(int id)

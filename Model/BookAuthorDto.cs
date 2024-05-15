@@ -8,5 +8,5 @@ namespace EBook.Model
         public BookDto Book { get; set; }
         public List<int> Authors { get; set; }
     }
-
+     
 }

@@ -1,5 +1,6 @@
 ﻿using EBook.Interface;
 using EBook.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,8 @@ namespace EBook.Controllers
             _searchRepository = searchRepository;
         }
 
+
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetBookByAuthorName")]
         public ActionResult GetBooksByAuthor(int authorId)
@@ -30,6 +33,8 @@ namespace EBook.Controllers
             return Ok(books);
         }
 
+
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetBooksByGenre")]
         public ActionResult GetBooksByGenre(int genreId)
@@ -42,6 +47,8 @@ namespace EBook.Controllers
             return Ok(books);
         }
 
+
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetBookByTitle")]
         public ActionResult GetBooksByTitle(string title)
