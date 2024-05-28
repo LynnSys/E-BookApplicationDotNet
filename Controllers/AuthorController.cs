@@ -17,7 +17,7 @@ namespace EBook.Controllers
             _authorRepository = authorRepository;
         }
 
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetAllAuthors")]
         public ActionResult GetAllAuthors()
@@ -33,6 +33,8 @@ namespace EBook.Controllers
             return Ok(_authorRepository.GetById(id));
         }
 
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("/EnterNewAuthor")]
         public ActionResult AddAuthor(AuthorDto author)
@@ -47,6 +49,7 @@ namespace EBook.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch]
         [Route("/UpdateAuthor")]
         public ActionResult UpdateBook(int id, UpdateAuthorDto book)
@@ -54,8 +57,9 @@ namespace EBook.Controllers
             return Ok(_authorRepository.UpdateAuthor(id, book));
         }
 
+        [Authorize(Roles = "Admin,User")]
         [HttpDelete]
-        [Route("/DeleteAuthor")]
+        [Route("/HardDeleteAuthor")]
         public ActionResult DeleteAuthor(int id)
         {
             return Ok(_authorRepository.DeleteAuthor(id));

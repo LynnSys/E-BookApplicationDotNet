@@ -6,11 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+    
 // Add services to the container.
-builder.Services.AddControllers();
+//builder.Services.AddControllers().AddFluentValidation(c =>
+//        c.RegisterValidatorsFromAssemblyContaining<EBook.Validators.BookValidators>());
+
 builder.Services.AddScoped<IBook, BookRepository>();
 builder.Services.AddScoped<IAuthor, AuthorRepository>();
 builder.Services.AddScoped<ISearch, SearchRepository>();

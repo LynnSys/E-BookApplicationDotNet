@@ -1,6 +1,7 @@
 using EBook.Interface;
 using EBook.Model;
 using EBook.Model.BookModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBook.Controllers
@@ -16,6 +17,7 @@ namespace EBook.Controllers
             _bookRepository = bookRepository;
         }
 
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetAllBooks")]
         public List<Book> GetAllBooks()
@@ -23,7 +25,7 @@ namespace EBook.Controllers
             return _bookRepository.GetAllBooks();
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("/EnterNewBook")]
         public ActionResult AddBook(BookAuthorDto book)
@@ -38,7 +40,7 @@ namespace EBook.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("/EnterBookWithAuthor")]
         public ActionResult EnterBookWithAuthor([FromBody] BookAuthorDto book)
@@ -47,6 +49,8 @@ namespace EBook.Controllers
             return Ok(_bookRepository.AddBookWithAuthors(book.Book,book.Authors));
         }
 
+
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("/GetById")]
         public ActionResult GetById(int id)
@@ -64,6 +68,7 @@ namespace EBook.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch]
         [Route("/UpdateBook")]
         public ActionResult UpdateBook(int id, UpdateBookDto book)
@@ -71,6 +76,7 @@ namespace EBook.Controllers
             return Ok(_bookRepository.UpdateBook(id, book));
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("/DeleteBook")]
         public ActionResult DeleteBook(int id)

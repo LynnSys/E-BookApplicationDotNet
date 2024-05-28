@@ -1,6 +1,5 @@
 ﻿using EBook.Interface;
 using EBook.Service;
-using EBook.Validators;
 
 namespace EBook.Model.BookModels
 {

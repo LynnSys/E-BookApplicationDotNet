@@ -6,9 +6,6 @@ using EBook.Model.BookModels;
 using EBook.Model.AuthorModel;
 using EBook.Model;
 using System.Security.Cryptography;
-using EBook.Validators;
-using FluentValidation;
-using FluentValidation.Results;
 using System.ComponentModel;
 
 
@@ -25,20 +22,20 @@ namespace EBook.Service
             //errorListBox.DataSource = errors;
         }
 
-        public void validateBook(Book b)
-        {
-            BookValidators validator = new BookValidators();
-            ValidationResult results = validator.Validate(b);
+        //public void validateBook(Book b)
+        //{
+        //    BookValidators validator = new BookValidators();
+        //    ValidationResult results = validator.Validate(b);
 
-            if(results.IsValid == false)
-            {
-                foreach(ValidationFailure failure in results.Errors)
-                {
-                    errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
-                }
+        //    if(results.IsValid == false)
+        //    {
+        //        foreach(ValidationFailure failure in results.Errors)
+        //        {
+        //            errors.Add($"{failure.PropertyName}: {failure.ErrorMessage}");
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
         public Book AddBook(BookDto book, List<int> authors)
         {
